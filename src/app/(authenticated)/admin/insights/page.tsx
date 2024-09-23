@@ -25,9 +25,7 @@ export default function PlatformInsightsPage() {
   const { data: shops, isLoading: isLoadingShops } = Api.shop.findMany.useQuery(
     {},
   )
-  const { data: users, isLoading: isLoadingUsers } = Api.user.findMany.useQuery({
-    include: { checkRole: true }
-  })
+const { data: users, isLoading: isLoadingUsers } = Api.user.findMany.useQuery({})
   const { data: rentals, isLoading: isLoadingRentals } =
     Api.rental.findMany.useQuery({})
   const { data: products, isLoading: isLoadingProducts } =
