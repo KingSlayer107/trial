@@ -9,6 +9,7 @@ import { useUploadPublic } from '@/core/hooks/upload'
 import { useSnackbar } from 'notistack'
 import dayjs from 'dayjs'
 import { Api } from '@/core/trpc'
+import type { RouterOutputs } from '@/core/trpc/internal/trpc.client'
 import { PageLayout } from '@/designSystem'
 
 export default function VendorCompetitionsPage() {
@@ -20,7 +21,7 @@ export default function VendorCompetitionsPage() {
   const { data: competitions, isLoading } = Api.competition.findMany.useQuery({
     where: { userId: user?.id },
     include: { rewards: true },
-  }) as { data: Array<{ id: string; name: string; endDate: string; description: string; currentSales: number; salesGoal: number; rewards: Array<{ id: string; name: string; points: number; redeemed: boolean; }> }> | undefined, isLoading: boolean };
+  }) as RouterOutputs['competition']['findMany'];
 
   const handleRedeemReward = async (rewardId: string) => {
     try {
