@@ -2,7 +2,7 @@ import { useUserContext } from '@/core/context'
 import { Utility } from '@/core/helpers/utility'
 import { useDesignSystem } from '@/designSystem/provider'
 import { MenuOutlined } from '@ant-design/icons'
-import { Avatar, Flex, Menu, Tag } from 'antd'
+import { Avatar, Flex, Menu } from 'antd'
 import { useRouter } from 'next/navigation'
 import { NavigationItem } from '../../types'
 
@@ -16,7 +16,7 @@ interface Props {
 export const Topbar: React.FC<Props> = ({ keySelected, items }) => {
   const router = useRouter()
 
-  const { user, checkRole } = useUserContext()
+  const { user } = useUserContext()
   const { isMobile } = useDesignSystem()
 
   if (isMobile) {
@@ -41,12 +41,6 @@ export const Topbar: React.FC<Props> = ({ keySelected, items }) => {
         </Flex>
 
         <Flex align="center" gap="middle">
-          {checkRole('ADMIN') && (
-            <Tag color="red" bordered={false}>
-              Admin
-            </Tag>
-          )}
-
           {user && (
             <Avatar
               src={user.pictureUrl}
