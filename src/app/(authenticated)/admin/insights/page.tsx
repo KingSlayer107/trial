@@ -33,7 +33,7 @@ const { data: users, isLoading: isLoadingUsers } = Api.user.findMany.useQuery({}
       include: { reviews: true, rentals: true }
     })
 
-  if (!user?.checkRole('admin')) {
+  if (user?.globalRole !== 'ADMIN') {
     enqueueSnackbar('You do not have permission to view this page.', {
       variant: 'error',
     })
