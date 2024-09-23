@@ -20,7 +20,7 @@ export default function VendorCompetitionsPage() {
   const { data: competitions, isLoading } = Api.competition.findMany.useQuery({
     where: { userId: user?.id },
     include: { rewards: true },
-  })
+  }) as { data: Array<{ id: string; name: string; endDate: string; description: string; currentSales: number; salesGoal: number; rewards: Array<{ id: string; name: string; points: number; redeemed: boolean; }> }> | undefined, isLoading: boolean };
 
   const handleRedeemReward = async (rewardId: string) => {
     try {
@@ -51,37 +51,37 @@ export default function VendorCompetitionsPage() {
         <List
           grid={{ gutter: 16, xs: 1, sm: 2, md: 2, lg: 2, xl: 3, xxl: 3 }}
           dataSource={competitions}
-          renderItem={competition => (
+          renderItem={(competition) => (
             <List.Item>
               <Card
                 title={
                   <Space>
                     <TrophyOutlined style={{ color: '#faad14' }} />
-                    {competition.name}
+                    {competition?.name || 'Unnamed Competition'}
                   </Space>
                 }
-                extra={dayjs(competition.endDate).format('MMM YYYY')}
+                extra={dayjs(competition?.endDate).format('MMM YYYY')}
               >
-                <Paragraph>{competition.description}</Paragraph>
+                <Paragraph>{competition?.description || 'No description available'}</Paragraph>
                 <Progress
                   percent={Math.min(
-                    (competition.currentSales / competition.salesGoal) * 100,
+                    ((competition?.currentSales || 0) / (competition?.salesGoal || 1)) * 100,
                     100,
                   )}
                   status={
-                    competition.currentSales >= competition.salesGoal
+                    (competition?.currentSales || 0) >= (competition?.salesGoal || 0)
                       ? 'success'
                       : 'active'
                   }
                 />
                 <Text>
-                  Sales: ${competition.currentSales.toFixed(2)} / $
-                  {competition.salesGoal.toFixed(2)}
+                  Sales: ${(competition?.currentSales || 0).toFixed(2)} / $
+                  {(competition?.salesGoal || 0).toFixed(2)}
                 </Text>
                 <List
                   itemLayout="horizontal"
-                  dataSource={competition.rewards}
-                  renderItem={reward => (
+                  dataSource={competition?.rewards || []}
+                  renderItem={(reward) => (
                     <List.Item>
                       <List.Item.Meta
                         avatar={
@@ -89,18 +89,18 @@ export default function VendorCompetitionsPage() {
                             style={{ fontSize: '24px', color: '#52c41a' }}
                           />
                         }
-                        title={reward.name}
-                        description={`${reward.points} points`}
+                        title={reward?.name || 'Unnamed Reward'}
+                        description={`${reward?.points || 0} points`}
                       />
                       <Button
                         type="primary"
                         disabled={
-                          reward.redeemed ||
-                          competition.currentSales < competition.salesGoal
+                          reward?.redeemed ||
+                          (competition?.currentSales || 0) < (competition?.salesGoal || 0)
                         }
-                        onClick={() => handleRedeemReward(reward.id)}
+                        onClick={() => handleRedeemReward(reward?.id || '')}
                       >
-                        {reward.redeemed ? 'Redeemed' : 'Redeem'}
+                        {reward?.redeemed ? 'Redeemed' : 'Redeem'}
                       </Button>
                     </List.Item>
                   )}
