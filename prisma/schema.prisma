@@ -31,6 +31,7 @@ model Shop {
   userId       String
   user         User?      @relation(fields: [userId], references: [id], name: "user")
   products     Product[]  @relation("shop")
+  rentals      Rental[]   @relation("shop")
   discounts    Discount[] @relation("shop")
   ads          Ad[]       @relation("shop")
   loyaltys     Loyalty[]  @relation("shop")
@@ -67,6 +68,8 @@ model Rental {
   user        User?    @relation(fields: [userId], references: [id], name: "user")
   productId   String
   product     Product? @relation(fields: [productId], references: [id], name: "product")
+  shopId      String
+  shop        Shop?    @relation(fields: [shopId], references: [id], name: "shop")
   dateCreated DateTime @default(now())
   dateUpdated DateTime @default(now()) @updatedAt()
 }

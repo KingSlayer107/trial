@@ -26,6 +26,7 @@ import { useSnackbar } from 'notistack'
 import dayjs from 'dayjs'
 import { Api } from '@/core/trpc'
 import { PageLayout } from '@/designSystem'
+import { Prisma } from '@prisma/client'
 
 export default function ShopManagementDashboardPage() {
   const router = useRouter()
@@ -37,7 +38,9 @@ export default function ShopManagementDashboardPage() {
     null,
   )
 
-  const { data: shop, isLoading: isShopLoading } = Api.shop.findFirst.useQuery({
+  const { data: shop, isLoading: isShopLoading } = Api.shop.findFirst.useQuery<Prisma.ShopGetPayload<{
+    include: { products: true, rentals: true, discounts: true }
+  }>>({
     where: { userId: user?.id },
     include: { products: true, rentals: true, discounts: true },
   })
