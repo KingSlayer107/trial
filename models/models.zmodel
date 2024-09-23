@@ -182,6 +182,8 @@ shops          Shop[]        @relation("user")
         wishlists  Wishlist[]  @relation("user")  
         notifications  Notification[]  @relation("user")  
 
+    checkRole: (role: string) => boolean
+
 @@auth()
     @@allow("all", auth().id == this.id)
     @@allow('all', auth().globalRole == 'ADMIN')

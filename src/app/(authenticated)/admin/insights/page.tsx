@@ -25,13 +25,15 @@ export default function PlatformInsightsPage() {
   const { data: shops, isLoading: isLoadingShops } = Api.shop.findMany.useQuery(
     {},
   )
-  const { data: users, isLoading: isLoadingUsers } = Api.user.findMany.useQuery(
-    {},
-  )
+  const { data: users, isLoading: isLoadingUsers } = Api.user.findMany.useQuery({
+    include: { checkRole: true }
+  })
   const { data: rentals, isLoading: isLoadingRentals } =
     Api.rental.findMany.useQuery({})
   const { data: products, isLoading: isLoadingProducts } =
-    Api.product.findMany.useQuery({})
+    Api.product.findMany.useQuery({
+      include: { reviews: true, rentals: true }
+    })
 
   if (!user?.checkRole('admin')) {
     enqueueSnackbar('You do not have permission to view this page.', {
